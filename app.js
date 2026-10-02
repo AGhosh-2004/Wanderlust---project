@@ -141,7 +141,7 @@ app.use((err, req, res, next)=>{
     res.status(status).send(message);
 })
 
-
-app.listen(8000, ()=>{
+let port = process.env.PORT||8000;
+app.listen(port, () => {
     console.log("running");
 })
