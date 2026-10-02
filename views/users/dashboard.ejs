@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../includes/header.ejs") %>
+<style>
+        :root {
+            --brand-primary: #fe385c;
+            --brand-primary-hover: #e00b41;
+            --brand-gradient: linear-gradient(135deg, #fe385c 0%, #e00b41 50%, #ff5a5f 100%);
+            --dark-surface: #0f172a;
+            --dark-card: #1e293b;
+            --light-bg: #f8fafc;
+            --border-color: rgba(226, 232, 240, 0.8);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+            --card-shadow-hover: 0 20px 35px -10px rgba(0, 0, 0, 0.12), 0 10px 15px -5px rgba(0, 0, 0, 0.06);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        .dashboard-wrapper {
+            position: relative;
+            top: 75px;
+            padding-bottom: 90px;
+        }
+
+        /* Flash Message */
+        .flash {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -150%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease;
+            width: fit-content;
+            height: fit-content;
+            background-color: #fe385c;
+            color: white;
+            z-index: 10000;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(254, 56, 92, 0.4);
+            pointer-events: none;
+        }
+
+        .flash.show {
+            transform: translate(-50%, 25px);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Hero Header */
+        .dashboard-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 70%, #2b1055 100%);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.35);
+        }
+
+        .dashboard-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(254, 56, 92, 0.25) 0%, rgba(254, 56, 92, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .host-avatar {
+            width: 72px;
+            height: 72px;
+            background: var(--brand-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 8px 20px rgba(254, 56, 92, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .host-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-brand-primary {
+            background: var(--brand-gradient);
+            color: white !important;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 18px rgba(254, 56, 92, 0.35);
+            text-decoration: none;
+        }
+
+        .btn-brand-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(254, 56, 92, 0.5);
+            color: white;
+        }
+
+        .btn-brand-outline {
+            background: rgba(255, 255, 255, 0.12);
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-brand-outline:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* KPI Stat Cards */
+        .stat-card {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .stat-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.pink {
+            background: rgba(254, 56, 92, 0.12);
+            color: #fe385c;
+        }
+
+        .stat-icon.amber {
+            background: rgba(245, 158, 11, 0.14);
+            color: #d97706;
+        }
+
+        .stat-icon.indigo {
+            background: rgba(99, 102, 241, 0.12);
+            color: #6366f1;
+        }
+
+        .stat-icon.emerald {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+        }
+
+        .stat-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Modern Tabs */
+        .nav-pills-custom {
+            display: flex;
+            gap: 10px;
+            background: #ffffff;
+            padding: 6px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            width: fit-content;
+            margin-bottom: 2rem;
+        }
+
+        .nav-pills-custom .tab-btn {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .nav-pills-custom .tab-btn.active {
+            background: var(--dark-surface);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+        }
+
+        .nav-pills-custom .tab-btn .badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-pills-custom .tab-btn.active .badge {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        /* Post / Stay Cards */
+        .stay-card {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .stay-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .stay-image-box {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #e2e8f0;
+        }
+
+        .stay-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .stay-card:hover .stay-image-box img {
+            transform: scale(1.05);
+        }
+
+        .stay-price-tag {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .stay-location-badge {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            color: #0f172a;
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 5px 12px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stay-card-body {
+            padding: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .stay-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .stay-description {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .stay-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.75rem;
+            border-top: 1px solid #f1f5f9;
+            margin-bottom: 1rem;
+        }
+
+        .stay-rating-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .stay-rating-pill i {
+            color: #f59e0b;
+            font-size: 1rem;
+        }
+
+        .stay-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stay-actions .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            flex: 1;
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-stay {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-view-stay:hover {
+            background-color: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .btn-edit-stay {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-edit-stay:hover {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .btn-delete-stay {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-delete-stay:hover {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Review Cards */
+        .review-card {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 1.6rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+
+        .review-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.25);
+        }
+
+        .reviewer-meta h6 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0f172a;
+        }
+
+        .guest-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .review-stars {
+            color: #f59e0b;
+            font-size: 0.95rem;
+            display: inline-flex;
+            gap: 2px;
+            margin-bottom: 0.75rem;
+        }
+
+        .review-comment {
+            font-size: 0.94rem;
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-left: 1.1rem;
+            border-left: 3px solid #fe385c;
+            font-style: italic;
+            flex-grow: 1;
+        }
+
+        .reviewed-property-pill {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .reviewed-property-pill:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .reviewed-property-pill img {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .reviewed-property-text {
+            font-size: 0.85rem;
+            overflow: hidden;
+        }
+
+        .reviewed-property-text span {
+            display: block;
+            font-size: 0.72rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .reviewed-property-text strong {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            color: #0f172a;
+        }
+
+        /* Empty States */
+        .empty-state-box {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 4rem 2rem;
+            text-align: center;
+            border: 2px dashed #cbd5e1;
+            margin: 1.5rem 0;
+        }
+
+        .empty-icon-circle {
+            width: 80px;
+            height: 80px;
+            background: #fff1f2;
+            color: #fe385c;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state-box h4 {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-box p {
+            color: #64748b;
+            max-width: 480px;
+            margin: 0 auto 1.5rem auto;
+            line-height: 1.6;
+        }
+
+        /* Search and Filter Bar */
+        .filter-search-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-input-group {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-input-group input {
+            border-radius: 50px;
+            padding: 10px 18px 10px 42px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .search-input-group input:focus {
+            outline: none;
+            border-color: #fe385c;
+            box-shadow: 0 0 0 3px rgba(254, 56, 92, 0.15);
+        }
+
+        .search-input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-pill {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-pill:hover, .filter-pill.active {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+        }
+
+        /* Modal custom styling */
+        .modal-content {
+            border-radius: var(--radius-md);
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-hero {
+                padding: 1.75rem;
+            }
+            .dashboard-hero-content {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 1.25rem;
+            }
+            .nav-pills-custom {
+                width: 100%;
+                overflow-x: auto;
+            }
+            .filter-search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-input-group {
+                width: 100%;
+            }
+        }
+    </style>
+<body>
+    <%- include("../includes/navbar.ejs") %>
+
+    <main class="container dashboard-wrapper">
+        <!-- Flash notifications -->
+        <% if(typeof success !== 'undefined' && success && success.length > 0) { %>
+            <div class="flash" id="flash-success"><%= success %></div>
+        <% } %>
+        <% if(typeof deleted !== 'undefined' && deleted && deleted.length > 0) { %>
+            <div class="flash" id="flash-deleted"><%= deleted %></div>
+        <% } %>
+
+        <!-- Hero Section -->
+        <header class="dashboard-hero" id="dashboardHero">
+            <div class="d-flex align-items-center justify-content-between dashboard-hero-content">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="host-avatar" aria-label="Host Profile Avatar">
+                        <%= (typeof user !== 'undefined' && user && user.username) ? user.username.charAt(0).toUpperCase() : (typeof curruser !== 'undefined' && curruser && curruser.username ? curruser.username.charAt(0).toUpperCase() : 'W') %>
+                    </div>
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h1 class="h3 fw-bold mb-0 text-white">Welcome, <%= (typeof user !== 'undefined' && user && user.username) ? user.username : (typeof curruser !== 'undefined' && curruser && curruser.username ? curruser.username : 'Host') %>!</h1>
+                            <span class="host-badge">
+                                <i class="ri-checkbox-circle-fill text-success"></i> Stay Host
+                            </span>
+                        </div>
+                        <p class="text-white-50 mb-0 small">
+                            <i class="ri-mail-line me-1"></i> <%= (typeof user !== 'undefined' && user && user.email) ? user.email : (typeof curruser !== 'undefined' && curruser && curruser.email ? curruser.email : '') %> &bull; Member of Wanderlust Community
+                        </p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <a href="/listings/new" class="btn-brand-primary" id="btnPostStay">
+                        <i class="ri-add-circle-fill"></i> Post a Stay
+                    </a>
+                    <a href="/listings" class="btn-brand-outline" id="btnExploreStays">
+                        <i class="ri-compass-3-line"></i> Explore All
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <% 
+            const userListings = (typeof listings !== 'undefined' && listings) ? listings : [];
+            const userOtherReviews = (typeof otherUserReviews !== 'undefined' && otherUserReviews) ? otherUserReviews : ((typeof allReviews !== 'undefined' && allReviews) ? allReviews : []);
+            const userRating = (typeof avgRating !== 'undefined') ? avgRating : 0;
+            const userLocations = (typeof locationsCount !== 'undefined') ? locationsCount : 0;
+        %>
+
+        <!-- KPI Metrics Grid -->
+        <section class="row g-3 mb-4" id="kpiMetrics" aria-label="Host Performance Metrics">
+            <div class="col-6 col-md-3">
+                <article class="stat-card">
+                    <div class="stat-icon pink">
+                        <i class="ri-home-heart-fill"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="totalStaysCount"><%= userListings.length %></div>
+                        <p class="stat-label">My Stays</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-6 col-md-3">
+                <article class="stat-card">
+                    <div class="stat-icon indigo">
+                        <i class="ri-message-3-fill"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="guestReviewsCount"><%= userOtherReviews.length %></div>
+                        <p class="stat-label">Guest Reviews</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-6 col-md-3">
+                <article class="stat-card">
+                    <div class="stat-icon amber">
+                        <i class="ri-star-smile-fill"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="averageRatingScore"><%= userRating %></div>
+                        <p class="stat-label">Avg Rating</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-6 col-md-3">
+                <article class="stat-card">
+                    <div class="stat-icon emerald">
+                        <i class="ri-map-pin-user-fill"></i>
+                    </div>
+                    <div>
+                        <div class="stat-value" id="destinationsCount"><%= userLocations %></div>
+                        <p class="stat-label">Locations</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-pills-custom" id="dashboardTabs" role="tablist" aria-label="Dashboard views">
+            <button class="tab-btn active" id="tabStays" type="button" onclick="switchDashboardTab('stays')">
+                <i class="ri-hotel-bed-line"></i> My Stays &amp; Posts
+                <span class="badge"><%= userListings.length %></span>
+            </button>
+            <button class="tab-btn" id="tabReviews" type="button" onclick="switchDashboardTab('reviews')">
+                <i class="ri-chat-voice-line"></i> Reviews from Others
+                <span class="badge"><%= userOtherReviews.length %></span>
+            </button>
+            <button class="tab-btn" id="tabInsights" type="button" onclick="switchDashboardTab('insights')">
+                <i class="ri-lightbulb-flash-line"></i> Hosting Insights
+            </button>
+        </nav>
+
+        <!-- TAB 1: USER'S POSTS / STAYS -->
+        <section id="tabContentStays" class="tab-pane-content" aria-labelledby="tabStays">
+            <div class="filter-search-bar">
+                <div>
+                    <h2 class="h5 fw-bold mb-1">Your Listed Stays</h2>
+                    <p class="text-muted small mb-0">Manage details, edit prices, or review guest views for your posts.</p>
+                </div>
+                <% if(userListings.length > 0) { %>
+                    <div class="search-input-group">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="staySearchInput" placeholder="Search your stays by title or city..." onkeyup="filterStays()">
+                    </div>
+                <% } %>
+            </div>
+
+            <% if(userListings.length === 0) { %>
+                <div class="empty-state-box">
+                    <div class="empty-icon-circle">
+                        <i class="ri-hotel-bed-line"></i>
+                    </div>
+                    <h4>No Stays Posted Yet!</h4>
+                    <p>You haven't posted any stays on Wanderlust yet. Share your apartment, villa, or vacation home with travelers looking for unforgettable experiences.</p>
+                    <a href="/listings/new" class="btn-brand-primary">
+                        <i class="ri-add-line"></i> Post Your First Stay
+                    </a>
+                </div>
+            <% } else { %>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="staysGrid">
+                    <% for(let listing of userListings) { %>
+                        <% 
+                            let imgUrl = listing.imageurl || (typeof listing.image === 'object' && listing.image ? listing.image.url : listing.image) || "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80";
+                            let displayDesc = listing.displayDescription || listing.description || listing.decription || "No description provided.";
+                        %>
+                        <div class="col stay-item-col" data-title="<%= (listing.title || '').toLowerCase() %>" data-location="<%= (listing.location || '').toLowerCase() %>">
+                            <article class="stay-card">
+                                <div class="stay-image-box">
+                                    <img src="<%= imgUrl %>" alt="<%= listing.title %>" loading="lazy">
+                                    <span class="stay-price-tag">
+                                        &#8377; <%= listing.price ? listing.price.toLocaleString("en-in") : '0' %> <small class="fw-normal">/ night</small>
+                                    </span>
+                                    <span class="stay-location-badge">
+                                        <i class="ri-map-pin-2-fill text-danger"></i> <%= listing.location %>, <%= listing.country %>
+                                    </span>
+                                </div>
+                                <div class="stay-card-body">
+                                    <h3 class="stay-title"><%= listing.title %></h3>
+                                    <p class="stay-description"><%= displayDesc %></p>
+                                    <div class="stay-meta">
+                                        <span class="stay-rating-pill">
+                                            <i class="ri-star-fill"></i>
+                                            <span><%= (listing.reviews && listing.reviews.length) || 0 %> review<%= (listing.reviews && listing.reviews.length === 1) ? '' : 's' %></span>
+                                        </span>
+                                        <small class="text-muted">
+                                            <i class="ri-eye-line me-1"></i> Public
+                                        </small>
+                                    </div>
+                                    <div class="stay-actions">
+                                        <a href="/listings/<%= listing._id %>" class="btn btn-view-stay" title="View Public Page">
+                                            <i class="ri-eye-line"></i> View
+                                        </a>
+                                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-edit-stay" title="Edit Listing">
+                                            <i class="ri-edit-line"></i> Edit
+                                        </a>
+                                        <button type="button" class="btn btn-delete-stay" onclick="openDeleteModal('<%= listing._id %>', '<%= (listing.title || '').replace(/'/g, '\\\'') %>')" title="Delete Listing">
+                                            <i class="ri-delete-bin-line"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    <% } %>
+                </div>
+                <div id="noStayMatchMessage" class="empty-state-box d-none">
+                    <p class="mb-0">No stays matched your search query.</p>
+                </div>
+            <% } %>
+        </section>
+
+        <!-- TAB 2: REVIEWS GIVEN BY OTHER USERS -->
+        <section id="tabContentReviews" class="tab-pane-content d-none" aria-labelledby="tabReviews">
+            <div class="filter-search-bar">
+                <div>
+                    <h2 class="h5 fw-bold mb-1">Reviews From Other Travelers</h2>
+                    <p class="text-muted small mb-0">Ratings and genuine feedback submitted by guests on your properties.</p>
+                </div>
+                <% if(userOtherReviews.length > 0) { %>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="search-input-group">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="reviewSearchInput" placeholder="Filter reviews by comment, guest, or stay..." onkeyup="filterReviews()">
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="filter-pill active" onclick="setRatingFilter(0, this)">All (<%= userOtherReviews.length %>)</button>
+                            <button class="filter-pill" onclick="setRatingFilter(5, this)">5 ★</button>
+                            <button class="filter-pill" onclick="setRatingFilter(4, this)">4 ★</button>
+                            <button class="filter-pill" onclick="setRatingFilter(3, this)">3 ★ &amp; below</button>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+            <% if(userOtherReviews.length === 0) { %>
+                <div class="empty-state-box">
+                    <div class="empty-icon-circle">
+                        <i class="ri-chat-smile-2-line"></i>
+                    </div>
+                    <h4>No Guest Reviews Yet!</h4>
+                    <p>None of your stays have received reviews from other users yet. Once travelers visit your stay and submit their ratings and experiences, their reviews will appear right here.</p>
+                    <a href="/listings" class="btn-brand-primary">
+                        <i class="ri-share-forward-line"></i> Share Your Listings
+                    </a>
+                </div>
+            <% } else { %>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="reviewsGrid">
+                    <% for(let review of userOtherReviews) { %>
+                        <% 
+                            let revName = review.reviewerName || review.ownername || (review.owner && review.owner.username) || "Traveler";
+                            let revRating = Number(review.rating) || 5;
+                            let revListingImg = review.listingImage || "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80";
+                            let revDate = review.formattedDate || (review.createdAt ? new Date(review.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Recently");
+                        %>
+                        <div class="col review-item-col" 
+                             data-rating="<%= revRating %>" 
+                             data-guest="<%= revName.toLowerCase() %>" 
+                             data-comment="<%= (review.comment || '').toLowerCase() %>" 
+                             data-stay="<%= (review.listingTitle || '').toLowerCase() %>">
+                            <article class="review-card">
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">
+                                        <%= revName.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <div class="reviewer-meta">
+                                        <h6><%= revName %></h6>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="guest-badge">
+                                                <i class="ri-shield-check-fill"></i> Verified Guest
+                                            </span>
+                                            <span class="text-muted small">&bull; <%= revDate %></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="review-stars" aria-label="<%= revRating %> out of 5 stars">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <% if(i <= revRating) { %>
+                                            <i class="fa-solid fa-star"></i>
+                                        <% } else { %>
+                                            <i class="fa-regular fa-star text-secondary" style="opacity: 0.35;"></i>
+                                        <% } %>
+                                    <% } %>
+                                    <span class="ms-1 fw-bold text-dark"><%= revRating %>.0</span>
+                                </div>
+
+                                <blockquote class="review-comment">
+                                    "<%= review.comment %>"
+                                </blockquote>
+
+                                <% if(review.listingId) { %>
+                                    <a href="/listings/<%= review.listingId %>" class="reviewed-property-pill" title="View <%= review.listingTitle %>">
+                                        <img src="<%= revListingImg %>" alt="<%= review.listingTitle %>">
+                                        <div class="reviewed-property-text">
+                                            <span>Stay Reviewed</span>
+                                            <strong><%= review.listingTitle %></strong>
+                                        </div>
+                                        <i class="ri-arrow-right-s-line ms-auto text-muted"></i>
+                                    </a>
+                                <% } %>
+                            </article>
+                        </div>
+                    <% } %>
+                </div>
+                <div id="noReviewMatchMessage" class="empty-state-box d-none">
+                    <p class="mb-0">No reviews matched your filters or search criteria.</p>
+                </div>
+            <% } %>
+        </section>
+
+        <!-- TAB 3: HOSTING INSIGHTS & PERFORMANCE -->
+        <section id="tabContentInsights" class="tab-pane-content d-none" aria-labelledby="tabInsights">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="stat-icon emerald">
+                                <i class="ri-medal-fill"></i>
+                            </div>
+                            <div>
+                                <h3 class="h5 fw-bold mb-1">Host Performance Checklist</h3>
+                                <p class="text-muted small mb-0">Follow these best practices to maintain a high guest satisfaction score.</p>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex align-items-start gap-3 px-0 py-3 border-light">
+                                <i class="ri-checkbox-circle-fill text-success fs-5"></i>
+                                <div>
+                                    <h4 class="h6 fw-bold mb-1">High-Quality Photography</h4>
+                                    <p class="text-muted small mb-0">Listings with bright, well-lit photos receive up to 40% more booking inquiries.</p>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex align-items-start gap-3 px-0 py-3 border-light">
+                                <i class="ri-checkbox-circle-fill text-success fs-5"></i>
+                                <div>
+                                    <h4 class="h6 fw-bold mb-1">Transparent Descriptions</h4>
+                                    <p class="text-muted small mb-0">Clear listings specifying accurate amenities set authentic expectations and earn 5-star reviews.</p>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex align-items-start gap-3 px-0 py-3 border-light">
+                                <i class="ri-checkbox-circle-fill text-success fs-5"></i>
+                                <div>
+                                    <h4 class="h6 fw-bold mb-1">Prompt Communication</h4>
+                                    <p class="text-muted small mb-0">Replying to travelers quickly gives them confidence and builds stronger trust before check-in.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h3 class="h5 fw-bold mb-3">Quick Actions</h3>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="/listings/new" class="btn btn-outline-danger rounded-pill px-4">
+                                <i class="ri-add-line me-1"></i> Add Another Stay
+                            </a>
+                            <a href="/listings" class="btn btn-outline-dark rounded-pill px-4">
+                                <i class="ri-compass-line me-1"></i> Browse Marketplace
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+                        <div class="mb-3">
+                            <div class="d-inline-flex p-3 rounded-circle bg-light text-danger fs-1">
+                                <i class="ri-award-line"></i>
+                            </div>
+                        </div>
+                        <h4 class="h5 fw-bold">Superhost Roadmap</h4>
+                        <p class="text-muted small mb-3">Earn the Superhost badge by hosting 3+ stays and maintaining an average rating of 4.8 or higher.</p>
+                        <div class="progress mb-2" style="height: 10px;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: <%= Math.min(100, Math.round((userListings.length / 3) * 100)) %>%;" aria-valuenow="<%= userListings.length %>" aria-valuemin="0" aria-valuemax="3"></div>
+                        </div>
+                        <small class="text-muted"><%= userListings.length %> of 3 Stays Listed</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteListingModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
+                        <i class="ri-error-warning-line me-1"></i> Delete Stay Confirmation
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="mb-1">Are you sure you want to permanently delete this stay?</p>
+                    <p class="fw-bold text-dark" id="modalListingTitle"></p>
+                    <p class="text-muted small mb-0">This action cannot be undone. All reviews associated with this listing will also be removed.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <form id="deleteListingForm" method="POST" action="" class="m-0">
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">
+                            <i class="ri-delete-bin-line me-1"></i> Yes, Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/js/index.js"></script>
+
+    <script>
+        // Tab switching
+        function switchDashboardTab(tabName) {
+            const tabs = ['stays', 'reviews', 'insights'];
+            tabs.forEach(t => {
+                const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+                const content = document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (t === tabName) {
+                    btn.classList.add('active');
+                    content.classList.remove('d-none');
+                } else {
+                    btn.classList.remove('active');
+                    content.classList.add('d-none');
+                }
+            });
+        }
+
+        // Delete Modal Handler
+        function openDeleteModal(listingId, listingTitle) {
+            document.getElementById('modalListingTitle').textContent = listingTitle;
+            const form = document.getElementById('deleteListingForm');
+            form.action = `/listings/${listingId}?_method=DELETE`;
+            const modalEl = document.getElementById('deleteListingModal');
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+        }
+
+        // Filter Stays search
+        function filterStays() {
+            const query = (document.getElementById('staySearchInput')?.value || '').toLowerCase().trim();
+            const stayItems = document.querySelectorAll('.stay-item-col');
+            let visibleCount = 0;
+
+            stayItems.forEach(item => {
+                const title = item.getAttribute('data-title') || '';
+                const location = item.getAttribute('data-location') || '';
+                if (title.includes(query) || location.includes(query)) {
+                    item.classList.remove('d-none');
+                    visibleCount++;
+                } else {
+                    item.classList.add('d-none');
+                }
+            });
+
+            const noMatch = document.getElementById('noStayMatchMessage');
+            if (noMatch) {
+                if (visibleCount === 0 && stayItems.length > 0) {
+                    noMatch.classList.remove('d-none');
+                } else {
+                    noMatch.classList.add('d-none');
+                }
+            }
+        }
+
+        // Filter Reviews by rating and query
+        let currentRatingFilter = 0;
+        function setRatingFilter(rating, btnElement) {
+            currentRatingFilter = rating;
+            document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+            filterReviews();
+        }
+
+        function filterReviews() {
+            const query = (document.getElementById('reviewSearchInput')?.value || '').toLowerCase().trim();
+            const reviewItems = document.querySelectorAll('.review-item-col');
+            let visibleCount = 0;
+
+            reviewItems.forEach(item => {
+                const rating = parseInt(item.getAttribute('data-rating') || '0', 10);
+                const guest = item.getAttribute('data-guest') || '';
+                const comment = item.getAttribute('data-comment') || '';
+                const stay = item.getAttribute('data-stay') || '';
+
+                const matchesQuery = guest.includes(query) || comment.includes(query) || stay.includes(query);
+                let matchesRating = true;
+
+                if (currentRatingFilter === 5) {
+                    matchesRating = (rating === 5);
+                } else if (currentRatingFilter === 4) {
+                    matchesRating = (rating === 4);
+                } else if (currentRatingFilter === 3) {
+                    matchesRating = (rating <= 3);
+                }
+
+                if (matchesQuery && matchesRating) {
+                    item.classList.remove('d-none');
+                    visibleCount++;
+                } else {
+                    item.classList.add('d-none');
+                }
+            });
+
+            const noMatch = document.getElementById('noReviewMatchMessage');
+            if (noMatch) {
+                if (visibleCount === 0 && reviewItems.length > 0) {
+                    noMatch.classList.remove('d-none');
+                } else {
+                    noMatch.classList.add('d-none');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

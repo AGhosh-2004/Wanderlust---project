@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../includes/header.ejs") %>
+<body>
+    <%- include("../includes/navbar.ejs") %>
+    <div class="container px-5" style="padding-top: 95px; padding-bottom: 50px;">
+        <h2 style="text-align: center;">Edit your post</h2>
+        <form method="POST" action="/listings/<%= data._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="title" class="form-label">Edit title</label>
+                    <input type="text" class="form-control" id="title" placeholder="Enter title" name="title" value="<%= data.title %>" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Description is required!</div>
+                </div>
+                <div class="mb-3 col-md-6"> 
+                    <label for="description" class="form-label">Description</label>
+                    <textarea type="text" class="form-control" id="description" placeholder="Enter description" name="decription" required><%= data.decription %></textarea>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Description is required!</div>
+                </div>
+            </div>
+
+            
+            
+            <div class="mb-3 row">
+                <label for="image" class="form-label">Upload new image</label>
+                <input type="file" class="form-control" id="image" placeholder="Enter image" name="image" accept="image/*">
+                <div class="valid-feedback">Looks good!</div>
+            </div>
+            <div class="mb-3 row">
+                <label for="price" class="form-label">Edit price</label>
+                <input type="number" class="form-control" id="price" placeholder="Enter price" name="price" value="<%= data.price %>" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Description is required!</div>
+            </div>
+            <div class="mb-3 row">
+                <label for="location" class="form-label">Edit location</label>
+                <input type="text" class="form-control" id="location" placeholder="Enter location" name="location" value="<%= data.location %>" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Description is required!</div>
+            </div>
+            <div class="mb-3 row">
+                <label for="country" class="form-label">Edit country</label>
+                <input type="text" class="form-control" id="country" placeholder="Enter country" name="country" value="<%= data.country %>" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Description is required!</div>
+            </div>
+             
+            <div class="row mb-3">
+                <button type="submit" class="btn btn-success editbtn">Submit your edit!!</button>
+            </div>
+            
+        </form>
+    </div>   
+    <script src="/js/index.js"></script> 
+</body>
+</html>

@@ -1,0 +1,834 @@
+<!-- Modern Wanderlust Glassmorphic Navbar -->
+<style>
+    :root {
+        --wl-brand: #fe385c;
+        --wl-brand-hover: #e00b41;
+        --wl-brand-gradient: linear-gradient(135deg, #fe385c 0%, #e00b41 50%, #ff5a5f 100%);
+        --wl-dark: #0f172a;
+        --wl-text-main: #1e293b;
+        --wl-text-muted: #64748b;
+        --wl-border: rgba(226, 232, 240, 0.9);
+        --wl-glass-bg: rgba(255, 255, 255, 0.92);
+        --wl-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+        --wl-shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.03);
+        --wl-shadow-dropdown: 0 20px 40px -10px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Fixed Navigation Bar */
+    .wl-navbar-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 76px;
+        background: var(--wl-glass-bg);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--wl-border);
+        box-shadow: var(--wl-shadow-sm);
+        z-index: 1050;
+        transition: all 0.3s ease;
+    }
+
+    .wl-navbar-container {
+        max-width: 1440px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 1.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    /* Brand Logo */
+    .wl-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        text-decoration: none;
+        color: var(--wl-dark);
+        flex-shrink: 0;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .wl-brand:hover {
+        transform: scale(1.03);
+        text-decoration: none;
+        color: var(--wl-dark);
+    }
+
+    .wl-brand-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--wl-brand-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(254, 56, 92, 0.35);
+        transform: rotate(-3deg);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .wl-brand:hover .wl-brand-badge {
+        transform: rotate(6deg) scale(1.06);
+        box-shadow: 0 6px 20px rgba(254, 56, 92, 0.45);
+    }
+
+    .wl-brand-badge i {
+        font-size: 1.45rem;
+        line-height: 1;
+    }
+
+    .wl-brand-title {
+        font-family: "Gilda Display", Georgia, serif;
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #0f172a 30%, #fe385c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Center Search Bar (Airbnb Pill Style) */
+    .wl-search-container {
+        flex: 1;
+        max-width: 470px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .wl-search-form {
+        width: 100%;
+        margin: 0;
+    }
+
+    .wl-search-pill {
+        display: flex;
+        align-items: center;
+        background: #ffffff;
+        border: 1px solid var(--wl-border);
+        border-radius: 9999px;
+        padding: 6px 8px 6px 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+    }
+
+    .wl-search-pill:hover,
+    .wl-search-pill:focus-within {
+        border-color: rgba(203, 213, 225, 1);
+        box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.12);
+        transform: translateY(-1px);
+    }
+
+    .wl-search-segment {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--wl-text-main);
+        white-space: nowrap;
+        background: transparent;
+        border: none;
+        padding: 0 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .wl-search-divider {
+        width: 1px;
+        height: 20px;
+        background-color: #e2e8f0;
+        margin: 0 8px;
+        flex-shrink: 0;
+    }
+
+    .wl-search-input-box {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .wl-search-input-field {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.86rem;
+        font-weight: 500;
+        color: var(--wl-text-main);
+        padding: 2px 4px;
+    }
+
+    .wl-search-input-field::placeholder {
+        color: #94a3b8;
+        font-weight: 400;
+    }
+
+    .wl-search-btn-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--wl-brand-gradient);
+        border: none;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-left: 6px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .wl-search-btn-icon i {
+        font-size: 0.95rem;
+    }
+
+    .wl-search-btn-icon:hover {
+        transform: scale(1.08);
+        box-shadow: 0 4px 12px rgba(254, 56, 92, 0.4);
+    }
+
+    /* Right Actions Container */
+    .wl-actions-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .wl-nav-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--wl-text-main);
+        text-decoration: none;
+        background: transparent;
+        border: 1px solid transparent;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .wl-nav-link-btn i {
+        font-size: 1.1rem;
+        color: var(--wl-brand);
+    }
+
+    .wl-nav-link-btn:hover {
+        background: rgba(0, 0, 0, 0.04);
+        color: var(--wl-text-main);
+        text-decoration: none;
+    }
+
+    .wl-nav-link-btn.primary-highlight {
+        background: rgba(254, 56, 92, 0.08);
+        color: var(--wl-brand);
+        border: 1px solid rgba(254, 56, 92, 0.2);
+    }
+
+    .wl-nav-link-btn.primary-highlight:hover {
+        background: var(--wl-brand);
+        color: #ffffff;
+        border-color: var(--wl-brand);
+    }
+
+    .wl-nav-link-btn.primary-highlight:hover i {
+        color: #ffffff;
+    }
+
+    /* User Profile Pill & Dropdown */
+    .wl-user-dropdown-wrapper {
+        position: relative;
+    }
+
+    .wl-user-pill-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        background: #ffffff;
+        border: 1px solid var(--wl-border);
+        border-radius: 9999px;
+        padding: 5px 6px 5px 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .wl-user-pill-btn:hover,
+    .wl-user-pill-btn.active {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    .wl-hamburger-icon {
+        font-size: 1.15rem;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .wl-user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        flex-shrink: 0;
+    }
+
+    .wl-user-avatar.has-user {
+        background: var(--wl-brand-gradient);
+        color: #ffffff;
+        box-shadow: 0 2px 6px rgba(254, 56, 92, 0.3);
+    }
+
+    .wl-user-avatar.no-user {
+        background: #475569;
+        color: #ffffff;
+    }
+
+    .wl-user-avatar.no-user i {
+        font-size: 0.9rem;
+    }
+
+    /* Floating Dropdown Card */
+    .wl-dropdown-card {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 260px;
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid var(--wl-border);
+        box-shadow: var(--wl-shadow-dropdown);
+        padding: 8px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px) scale(0.96);
+        transform-origin: top right;
+        transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 1100;
+    }
+
+    .wl-dropdown-card.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+    }
+
+    .wl-dropdown-user-header {
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        background: #f8fafc;
+        border-radius: 12px;
+        margin-bottom: 6px;
+    }
+
+    .wl-dropdown-user-badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--wl-brand);
+    }
+
+    .wl-dropdown-user-name {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--wl-dark);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .wl-dropdown-user-email {
+        font-size: 0.75rem;
+        color: var(--wl-text-muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .wl-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 10px 12px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: var(--wl-text-main);
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.15s ease;
+    }
+
+    .wl-dropdown-item i {
+        font-size: 1.15rem;
+        color: var(--wl-text-muted);
+        width: 20px;
+        text-align: center;
+        transition: color 0.15s ease;
+    }
+
+    .wl-dropdown-item:hover {
+        background: #f1f5f9;
+        color: var(--wl-dark);
+        text-decoration: none;
+    }
+
+    .wl-dropdown-item:hover i {
+        color: var(--wl-brand);
+    }
+
+    .wl-dropdown-item.active-item {
+        color: var(--wl-brand);
+        font-weight: 600;
+    }
+
+    .wl-dropdown-item.active-item i {
+        color: var(--wl-brand);
+    }
+
+    .wl-dropdown-item .badge-tag {
+        margin-left: auto;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(254, 56, 92, 0.12);
+        color: var(--wl-brand);
+    }
+
+    .wl-dropdown-divider {
+        height: 1px;
+        background-color: #f1f5f9;
+        margin: 6px 0;
+    }
+
+    .wl-dropdown-item.logout-danger {
+        color: #ef4444;
+    }
+
+    .wl-dropdown-item.logout-danger i {
+        color: #ef4444;
+    }
+
+    .wl-dropdown-item.logout-danger:hover {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    /* Mobile Hamburger Button */
+    .wl-mobile-menu-btn {
+        display: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid var(--wl-border);
+        color: var(--wl-dark);
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .wl-mobile-menu-btn:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+    }
+
+    /* Mobile Drawer */
+    .wl-mobile-drawer {
+        display: none;
+        position: fixed;
+        top: 76px;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border-bottom: 1px solid var(--wl-border);
+        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.08);
+        padding: 1.25rem 1.5rem 1.5rem;
+        z-index: 1040;
+        max-height: calc(100vh - 76px);
+        overflow-y: auto;
+        transform: translateY(-10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .wl-mobile-drawer.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .wl-mobile-search-form {
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        border: 1px solid var(--wl-border);
+        border-radius: 14px;
+        padding: 10px 14px;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .wl-mobile-search-form i {
+        font-size: 1.1rem;
+        color: var(--wl-brand);
+    }
+
+    .wl-mobile-search-form input {
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--wl-dark);
+        width: 100%;
+    }
+
+    .wl-mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .wl-mobile-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 12px 14px;
+        font-size: 0.98rem;
+        font-weight: 600;
+        color: var(--wl-text-main);
+        text-decoration: none;
+        border-radius: 12px;
+        transition: background 0.15s ease;
+    }
+
+    .wl-mobile-nav-link i {
+        font-size: 1.25rem;
+        color: var(--wl-text-muted);
+    }
+
+    .wl-mobile-nav-link:hover,
+    .wl-mobile-nav-link.active-link {
+        background: #f8fafc;
+        color: var(--wl-brand);
+        text-decoration: none;
+    }
+
+    .wl-mobile-nav-link:hover i,
+    .wl-mobile-nav-link.active-link i {
+        color: var(--wl-brand);
+    }
+
+    .wl-mobile-auth-box {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .wl-mobile-auth-box a {
+        flex: 1;
+        text-align: center;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 992px) {
+        .wl-search-container {
+            max-width: 340px;
+        }
+        .wl-search-segment:nth-child(3),
+        .wl-search-divider:nth-child(2) {
+            display: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .wl-search-container {
+            display: none;
+        }
+        .wl-actions-container .wl-nav-link-btn {
+            display: none;
+        }
+        .wl-mobile-menu-btn {
+            display: inline-flex;
+        }
+        .wl-mobile-drawer {
+            display: block;
+        }
+        .wl-navbar-container {
+            padding: 0 1.25rem;
+        }
+    }
+</style>
+
+<!-- ==========================================================================
+     NAVBAR HTML STRUCTURE
+     ========================================================================== -->
+<header class="wl-navbar-wrapper" id="wanderlustNavbar">
+    <div class="wl-navbar-container">
+
+        <!-- 1. BRAND LOGO SECTION:
+             Displays the Wanderlust logo with a gradient compass icon.
+             Clicking this navigates back to the all-listings explore page (/listings). -->
+        <a href="/listings" class="wl-brand" aria-label="Wanderlust Stays Homepage">
+            <div class="wl-brand-badge">
+                <i class="ri-compass-3-fill"></i>
+            </div>
+            <span class="wl-brand-title">wanderlust</span>
+        </a>
+
+        <!-- 2. CENTER SEARCH BAR (Airbnb-Style Floating Pill):
+             Allows travelers to search for stays by title, city, or country.
+             - On the /listings page: Typing here automatically filters stays live without reload.
+             - On any other page: Submitting sends a GET request to /listings?search=... -->
+        <div class="wl-search-container" id="navbarSearchContainer">
+            <form action="/listings" method="GET" class="wl-search-form" id="navbarSearchForm">
+                <div class="wl-search-pill" id="navbarSearchPill" onclick="focusNavbarSearchInput()">
+                    <!-- Decorative quick-filters for Airbnb feel; clicking focuses search input -->
+                    <button type="button" class="wl-search-segment" tabindex="-1">
+                        Anywhere
+                    </button>
+                    <span class="wl-search-divider"></span>
+                    <button type="button" class="wl-search-segment" tabindex="-1">
+                        Any week
+                    </button>
+                    <span class="wl-search-divider"></span>
+
+                    <!-- The actual text input for search keyword -->
+                    <div class="wl-search-input-box">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            id="navbarSearchInput" 
+                            class="wl-search-input-field" 
+                            placeholder="Search stays or cities..." 
+                            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <!-- Search submit button with magnifying glass icon -->
+                    <button type="submit" class="wl-search-btn-icon" aria-label="Search listings">
+                        <i class="ri-search-2-line"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 3. RIGHT-SIDE ACTIONS CONTAINER:
+             Contains host links, explore link, user profile dropdown, and mobile menu button -->
+        <div class="wl-actions-container">
+
+            <!-- "Post a stay" button: Quick shortcut to create a new stay (/listings/new) -->
+            <a href="/listings/new" class="wl-nav-link-btn primary-highlight" id="navPostStayBtn">
+                <i class="ri-add-circle-fill"></i>
+                <span>Post a stay</span>
+            </a>
+
+            <!-- "Explore" button: Shortcut to view all posts (/listings) -->
+            <a href="/listings" class="wl-nav-link-btn" id="navExploreBtn">
+                <i class="ri-compass-3-line"></i>
+                <span>Explore</span>
+            </a>
+
+            <!-- 4. USER PROFILE PILL & FLOATING DROPDOWN:
+                 Displays a rounded pill with a hamburger icon and user avatar.
+                 Clicking opens a floating menu card with account options. -->
+            <div class="wl-user-dropdown-wrapper" id="userMenuWrapper">
+                <button 
+                    type="button" 
+                    class="wl-user-pill-btn" 
+                    id="userMenuBtn" 
+                    aria-expanded="false" 
+                    aria-haspopup="true"
+                    aria-label="User account menu"
+                >
+                    <i class="ri-menu-line wl-hamburger-icon"></i>
+
+                    <!-- If user is LOGGED IN: Show their first initial in a colored circle -->
+                    <% if(typeof curruser !== 'undefined' && curruser) { %>
+                        <div class="wl-user-avatar has-user">
+                            <%= curruser.username ? curruser.username.charAt(0).toUpperCase() : 'U' %>
+                        </div>
+                    <!-- If user is LOGGED OUT: Show generic grey user icon -->
+                    <% } else { %>
+                        <div class="wl-user-avatar no-user">
+                            <i class="ri-user-3-fill"></i>
+                        </div>
+                    <% } %>
+                </button>
+
+                <!-- Floating Dropdown Card (opens when user clicks userMenuBtn) -->
+                <div class="wl-dropdown-card" id="userDropdownMenu" role="menu">
+
+                    <!-- Content when user is LOGGED IN -->
+                    <% if(typeof curruser !== 'undefined' && curruser) { %>
+                        <!-- User Info Card Header -->
+                        <div class="wl-dropdown-user-header">
+                            <span class="wl-dropdown-user-badge">Host Account</span>
+                            <span class="wl-dropdown-user-name"><%= curruser.username %></span>
+                            <% if(curruser.email) { %>
+                                <span class="wl-dropdown-user-email"><%= curruser.email %></span>
+                            <% } %>
+                        </div>
+
+                        <!-- Link to Host Dashboard (metrics, reviews, stays) -->
+                        <a href="/user/dashboard" class="wl-dropdown-item active-item" role="menuitem">
+                            <i class="ri-dashboard-3-line"></i>
+                            <span>Host Dashboard</span>
+                            <span class="badge-tag">Host</span>
+                        </a>
+
+                        <!-- Link to post a new listing -->
+                        <a href="/listings/new" class="wl-dropdown-item" role="menuitem">
+                            <i class="ri-add-circle-line"></i>
+                            <span>Post a new stay</span>
+                        </a>
+
+                        <!-- Link to explore all marketplace stays -->
+                        <a href="/listings" class="wl-dropdown-item" role="menuitem">
+                            <i class="ri-hotel-bed-line"></i>
+                            <span>Explore all stays</span>
+                        </a>
+
+                        <div class="wl-dropdown-divider"></div>
+
+                        <!-- Logout link -->
+                        <a href="/user/logout" class="wl-dropdown-item logout-danger" role="menuitem">
+                            <i class="ri-logout-box-r-line"></i>
+                            <span>Log out</span>
+                        </a>
+
+                    <!-- Content when user is LOGGED OUT -->
+                    <% } else { %>
+                        <!-- Login link -->
+                        <a href="/user/login" class="wl-dropdown-item active-item" role="menuitem">
+                            <i class="ri-login-box-line"></i>
+                            <span>Log in</span>
+                        </a>
+
+                        <!-- Signup link -->
+                        <a href="/user/signup" class="wl-dropdown-item" role="menuitem">
+                            <i class="ri-user-add-line"></i>
+                            <span>Sign up</span>
+                            <span class="badge-tag">Join</span>
+                        </a>
+
+                        <div class="wl-dropdown-divider"></div>
+
+                        <!-- Link to become a host -->
+                        <a href="/listings/new" class="wl-dropdown-item" role="menuitem">
+                            <i class="ri-home-heart-line"></i>
+                            <span>Become a Host</span>
+                        </a>
+
+                        <!-- Explore link -->
+                        <a href="/listings" class="wl-dropdown-item" role="menuitem">
+                            <i class="ri-compass-3-line"></i>
+                            <span>Explore stays</span>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- 5. MOBILE HAMBURGER BUTTON:
+                 Visible ONLY on screens under 768px (phones & tablets).
+                 Toggles the mobile slide-down drawer open/closed. -->
+            <button 
+                type="button" 
+                class="wl-mobile-menu-btn" 
+                id="mobileMenuToggleBtn" 
+                aria-label="Toggle mobile menu"
+                aria-expanded="false"
+            >
+                <i class="ri-menu-4-line" id="mobileMenuIcon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 6. MOBILE SLIDE-DOWN DRAWER:
+         Opens when mobile hamburger button is clicked on small screens. -->
+    <div class="wl-mobile-drawer" id="mobileNavDrawer">
+        <!-- Mobile Search Input Form -->
+        <form action="/listings" method="GET" class="wl-mobile-search-form" id="mobileSearchForm">
+            <i class="ri-search-2-line"></i>
+            <input 
+                type="text" 
+                name="search" 
+                id="mobileSearchInput" 
+                placeholder="Where to next?" 
+                value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            >
+            <button type="submit" class="btn btn-sm btn-danger rounded-pill px-3 py-1" style="background-color: var(--wl-brand); border: none;">
+                Search
+            </button>
+        </form>
+
+        <!-- Mobile Navigation Links -->
+        <nav class="wl-mobile-nav-links">
+            <a href="/listings" class="wl-mobile-nav-link active-link">
+                <i class="ri-compass-3-line"></i>
+                <span>Explore Stays</span>
+            </a>
+            <a href="/listings/new" class="wl-mobile-nav-link">
+                <i class="ri-add-circle-line"></i>
+                <span>Post a Stay</span>
+            </a>
+
+            <!-- Logged-in Mobile Section -->
+            <% if(typeof curruser !== 'undefined' && curruser) { %>
+                <div class="wl-dropdown-divider my-2"></div>
+                <div class="d-flex align-items-center gap-3 px-3 py-2 bg-light rounded-3 mb-2">
+                    <div class="wl-user-avatar has-user">
+                        <%= curruser.username ? curruser.username.charAt(0).toUpperCase() : 'U' %>
+                    </div>
+                    <div>
+                        <div class="fw-bold small text-dark"><%= curruser.username %></div>
+                        <div class="text-muted" style="font-size: 0.75rem;"><%= curruser.email || '' %></div>
+                    </div>
+                </div>
+                <a href="/user/dashboard" class="wl-mobile-nav-link">
+                    <i class="ri-dashboard-3-line"></i>
+                    <span>Host Dashboard</span>
+                </a>
+                <a href="/user/logout" class="wl-mobile-nav-link text-danger">
+                    <i class="ri-logout-box-r-line text-danger"></i>
+                    <span>Log out</span>
+                </a>
+
+            <!-- Logged-out Mobile Section: Login / Sign Up buttons -->
+            <% } else { %>
+                <div class="wl-mobile-auth-box">
+                    <a href="/user/login" class="btn btn-outline-dark">Log in</a>
+                    <a href="/user/signup" class="btn text-white" style="background-color: var(--wl-brand);">Sign up</a>
+                </div>
+            <% } %>
+        </nav>
+    </div>
+</header>

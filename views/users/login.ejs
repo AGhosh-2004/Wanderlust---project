@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../includes/header.ejs") %>
+<style>
+    html,body{
+        height: 100%;
+    }
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container
+    {
+        height: auto;
+        width: 500px;
+        position: relative;
+        border-radius: 10%;
+        padding: 2rem;
+    }
+    .container img{
+        width: 100%;
+        height: fit-content;
+    }
+    .flash{
+        position: absolute;
+        top: 0;
+        left: 50%;
+        /* Hidden off-screen above the container and centered horizontally */
+        transform: translate(-50%, -150%);
+        opacity: 0;
+
+        /* Hardware-accelerated smooth transition */
+        transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease;
+
+        width: fit-content;
+        height: fit-content;
+        background-color: crimson;
+        color: white;
+        z-index: 9999;
+        padding: 8px 16px;
+        border-radius: 4px;
+        pointer-events: none;
+    }
+    .flash.show {
+        transform: translate(-50%, 20px);
+        opacity: 1;
+        pointer-events: auto;
+    }
+</style>
+<body>
+    <% if(deleted.length > 0) {%>
+        <div class="flash"><%= deleted %></div>
+    <% } %>
+    <div class="container">
+        <img src="/images/login.svg" alt="login">
+        <form method="post" action="/user/login"  novalidate class="needs-validation">
+            <div class="mb-3 row">
+                <label for="email" class="form-label">Email</label>
+                <input type="text" class="form-control" id="email" placeholder="Type your email" name="email" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Email is required!</div>
+            </div>
+            <div class="mb-3 row">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="please enter your password" name="password" required/>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Password is required!</div>
+            </div>
+            <button type="submit" class="btn btn-outline-danger">Submit to login</button>
+        </form>   
+    </div>         
+    <script src="/js/index.js"></script>
+</body>
+</html>

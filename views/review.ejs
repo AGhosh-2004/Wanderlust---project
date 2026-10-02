@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./includes/header.ejs") %>
+<style>
+    html,body{
+        height: 100%;
+    }
+    .container
+    {
+        height: auto;
+        width: 500px;
+        border: 2px solid crimson;
+        position: relative;
+        top: 25%;
+        border-radius: 20%;
+        padding: 2rem;
+    }
+    /* .container form{
+        position: relative;
+        top: 50%;
+    } */
+</style>
+<body>
+    <div class="container">
+        <form method="post" action="/listings/reviews/<%= id %>" novalidate class="needs-validation">
+            <div class="mb-3 row">
+                <label for="comment" class="form-label">Comment</label>
+                <textarea type="text" class="form-control" id="comment" placeholder="Type your comment" name="comment" required></textarea>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Comment is required!</div>
+            </div>
+            <div class="mb-3 row">
+                <label for="rating" class="form-label">Ratings</label>
+                <input type="number" min="1" max="5" class="form-control" id="rating" placeholder="please express your feelings in number" name="rating" required/>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please give it!</div>
+            </div>
+
+            
+
+            <button type="submit" class="btn btn-outline-danger">Submit your feelings about us!</button>
+        </form>   
+    </div>         
+    <script src="/js/index.js"></script>
+</body>
+</html>
+
+
+
+<!-- <fieldset class="starability-slot" style="display: none;">
+                <legend>First rating:</legend>
+                <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                <input type="radio" id="first-rate1" name="rating" value="1" />
+                <label for="first-rate1" title="Terrible">1 star</label>
+                <input type="radio" id="first-rate2" name="rating" value="2" />
+                <label for="first-rate2" title="Not good">2 stars</label>
+                <input type="radio" id="first-rate3" name="rating" value="3" />
+                <label for="first-rate3" title="Average">3 stars</label>
+                <input type="radio" id="first-rate4" name="rating" value="4" />
+                <label for="first-rate4" title="Very good">4 stars</label>
+                <input type="radio" id="first-rate5" name="rating" value="5" />
+                <label for="first-rate5" title="Amazing">5 stars</label>
+            </fieldset> -->
